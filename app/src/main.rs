@@ -1,12 +1,24 @@
 mod errors;
 
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, App, HttpResponse, HttpServer, Responder, web};
 use dotenvy::{dotenv_override, var};
-use sqlx::{Executor, PgPool};
+use sqlx::{Error, Executor, PgPool, query_scalar};
 
 #[get("/")]
 async fn hello_world() -> impl Responder {
     HttpResponse::Ok().body("Hello World!")
+}
+
+#[get("/version")]
+async fn get_version(pool: web::Data<PgPool>) -> impl Responder {
+    let result: Result<String, Error> = query_scalar("SELECT version()")
+        .fetch_one(pool.get_ref())
+        .await;
+
+    match result {
+        Ok(version) => HttpResponse::Ok().body(version),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {:?}", e)),
+    }
 }
 
 #[actix_web::main]
@@ -33,9 +45,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Startup actix backend server
     println!("Starting Actix HttpServer...");
-    HttpServer::new(move || App::new().app_data(pool.clone()).service(hello_world))
-        .bind(("localhost", 8080))?
-        .run()
-        .await?;
+    HttpServer::new(move || {
+        App::new()
+            .app_data(web::Data::new(pool.clone()))
+            .service(hello_world)
+            .service(get_version)
+    })
+    .bind(("localhost", 8080))?
+    .run()
+    .await?;
     Ok(())
 }
