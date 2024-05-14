@@ -1,10 +1,10 @@
 use api_lib::health::health_service;
 
-use actix_web::{App, test, web};
 use actix_web::body::to_bytes;
 use actix_web::http::StatusCode;
+use actix_web::{test, web, App};
 use dotenvy::{dotenv_override, var};
-use sqlx::{PgPool, query_scalar};
+use sqlx::{query_scalar, PgPool};
 
 #[actix_web::test]
 async fn test_health_check() {
