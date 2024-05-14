@@ -1,27 +1,9 @@
-mod errors;
-
-use actix_web::{get, App, HttpResponse, HttpServer, Responder, web};
+use actix_web::{web, App, HttpServer};
 use dotenvy::{dotenv_override, var};
-use sqlx::{Error, Executor, PgPool, query_scalar};
+use sqlx::{Executor, PgPool};
 use tracing_actix_web::TracingLogger;
 
-#[get("/")]
-async fn hello_world() -> impl Responder {
-    HttpResponse::Ok().body("Hello World!")
-}
-
-#[get("/version")]
-async fn get_version(pool: web::Data<PgPool>) -> impl Responder {
-    tracing::info!("Getting version...");
-    let result: Result<String, Error> = query_scalar("SELECT version()")
-        .fetch_one(pool.get_ref())
-        .await;
-
-    match result {
-        Ok(version) => HttpResponse::Ok().body(version),
-        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {:?}", e)),
-    }
-}
+pub mod errors;
 
 #[actix_web::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -59,8 +41,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         App::new()
             .wrap(TracingLogger::default())
             .app_data(web::Data::new(pool.clone()))
-            .service(hello_world)
-            .service(get_version)
+            .service(api_lib::health::hello_world)
+            .service(api_lib::health::get_version)
     })
     .bind(("localhost", 8080))?
     .run()

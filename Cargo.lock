@@ -257,12 +257,18 @@ dependencies = [
 [[package]]
 name = "api-lib"
 version = "0.1.0"
+dependencies = [
+ "actix-web",
+ "sqlx",
+ "tracing",
+]
 
 [[package]]
 name = "app"
 version = "0.1.0"
 dependencies = [
  "actix-web",
+ "api-lib",
  "derive_more",
  "dotenvy",
  "sqlx",
