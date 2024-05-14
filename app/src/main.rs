@@ -41,8 +41,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         App::new()
             .wrap(TracingLogger::default())
             .app_data(web::Data::new(pool.clone()))
-            .service(api_lib::health::hello_world)
-            .service(api_lib::health::get_version)
+            .service(api_lib::health::health)
     })
     .bind(("localhost", 8080))?
     .run()
