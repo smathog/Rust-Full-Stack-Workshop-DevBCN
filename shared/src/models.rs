@@ -1,3 +1,6 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct FilmModel {
     pub id: uuid::Uuid, // we will be using uuids as ids
     pub title: String,
@@ -8,6 +11,7 @@ pub struct FilmModel {
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct CreateFilmModel {
     pub title: String,
     pub director: String,

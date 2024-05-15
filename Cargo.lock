@@ -260,6 +260,8 @@ version = "0.1.0"
 dependencies = [
  "actix-web",
  "dotenvy",
+ "serde",
+ "serde_json",
  "shared",
  "sqlx",
  "tracing",
@@ -1652,6 +1654,7 @@ name = "shared"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "serde",
  "uuid",
 ]
 
