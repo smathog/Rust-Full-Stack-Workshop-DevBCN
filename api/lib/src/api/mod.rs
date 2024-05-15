@@ -1,2 +1,5 @@
-pub mod films;
-pub mod health;
+mod films;
+mod health;
+
+pub use films::*;
+pub use health::*;

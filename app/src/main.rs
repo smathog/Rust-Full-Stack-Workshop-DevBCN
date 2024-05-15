@@ -1,6 +1,8 @@
 use actix_web::{web, App, HttpServer};
+use api_lib::PostgresFilmRepository;
 use dotenvy::{dotenv_override, var};
 use sqlx::{Executor, PgPool};
+use tokio::sync::RwLock;
 use tracing_actix_web::TracingLogger;
 
 pub mod errors;
@@ -40,7 +42,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
-            .app_data(web::Data::new(pool.clone()))
+            .app_data(web::Data::new(RwLock::new(PostgresFilmRepository::new(
+                pool.clone(),
+            ))))
             .configure(api_lib::health_service)
             .configure(api_lib::films_service)
     })
