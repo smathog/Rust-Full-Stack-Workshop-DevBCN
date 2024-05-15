@@ -14,7 +14,7 @@ sqlx = { version = "0.7", default-features = false, features = [
     "chrono",
     "json",
 ] }
-shared = { path = "../../shared" }
+shared = { path = "../../shared", features = ["backend"] }
 tracing = "0.1"
 serde = "1.0"
 serde_json = "1.0"

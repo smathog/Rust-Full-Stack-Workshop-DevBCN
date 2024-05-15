@@ -9,7 +9,7 @@ pub type FilmResult<T> = Result<T, FilmError>;
 pub trait FilmRepository: Send + Sync + 'static {
     async fn get_films(&self) -> FilmResult<Vec<FilmModel>>;
     async fn get_film(&self, id: &Uuid) -> FilmResult<FilmModel>;
-    async fn create_film(&self, id: &CreateFilmModel) -> FilmResult<FilmModel>;
-    async fn update_film(&self, id: &FilmModel) -> FilmResult<FilmModel>;
-    async fn delete_film(&self, id: &Uuid) -> FilmResult<Uuid>;
+    async fn create_film(&mut self, model: &CreateFilmModel) -> FilmResult<FilmModel>;
+    async fn update_film(&mut self, model: &FilmModel) -> FilmResult<FilmModel>;
+    async fn delete_film(&mut self, id: &Uuid) -> FilmResult<Uuid>;
 }
