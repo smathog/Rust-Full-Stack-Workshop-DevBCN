@@ -1,5 +1,5 @@
 use actix_web::{web, App, HttpServer};
-use api_lib::PostgresFilmRepository;
+use api_lib::{FilmRepository, PostgresFilmRepository, RepoTypeDynamic};
 use dotenvy::{dotenv_override, var};
 use sqlx::{Executor, PgPool};
 use tokio::sync::RwLock;
@@ -36,17 +36,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await
         .map_err(|e| errors::SqlxErrorWrapper(e))?;
     tracing::info!("Schema present...");
+    let global_state: RepoTypeDynamic = web::Data::new(RwLock::new(
+        Box::new(PostgresFilmRepository::new(pool.clone())),
+    ));
 
     // Startup actix backend server
     tracing::info!("Starting Actix HttpServer...");
     HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
-            .app_data(web::Data::new(RwLock::new(PostgresFilmRepository::new(
-                pool.clone(),
-            ))))
+            .app_data(global_state.clone())
             .configure(api_lib::health_service)
-            .configure(api_lib::films_service)
+            .configure(api_lib::films_service_dynamic)
     })
     .bind(("localhost", 8080))?
     .run()

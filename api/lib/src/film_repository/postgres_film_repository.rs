@@ -19,7 +19,7 @@ impl FilmRepository for PostgresFilmRepository {
     async fn get_films(&self) -> FilmResult<Vec<FilmModel>> {
         query_as::<_, FilmModel>(
             r#"
-            SELECT id, title, directory, year, poster, created_at, updated_at
+            SELECT id, title, director, year, poster, created_at, updated_at
             FROM films
             "#,
         )

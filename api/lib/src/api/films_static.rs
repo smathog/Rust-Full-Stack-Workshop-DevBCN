@@ -3,7 +3,7 @@ use actix_web::web::ServiceConfig;
 
 use endpoints::*;
 
-pub fn films_service(cfg: &mut ServiceConfig) {
+pub fn films_service_static(cfg: &mut ServiceConfig) {
     cfg.service(
         web::scope("/v1/films")
             .service(get_films)

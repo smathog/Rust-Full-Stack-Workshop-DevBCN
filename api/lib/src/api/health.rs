@@ -1,27 +1,18 @@
 use actix_web::web::ServiceConfig;
 
-use endpoints::*;
-
 pub fn health_service(cfg: &mut ServiceConfig) {
-    cfg.service(health);
+    cfg.service(endpoints::health);
 }
 
 mod endpoints {
-    use actix_web::{get, web, HttpResponse, Responder};
-    use sqlx::{query_scalar, Error, PgPool};
+    use actix_web::{get, HttpResponse, Responder};
+    use crate::API_VERSION;
 
     #[get("/health")]
-    async fn health(pool: web::Data<PgPool>) -> impl Responder {
-        tracing::info!("Getting version...");
-        let result: Result<String, Error> = query_scalar("SELECT version()")
-            .fetch_one(pool.get_ref())
-            .await;
-
-        match result {
-            Ok(version) => HttpResponse::Ok()
-                .append_header(("version", version.clone()))
-                .body(version),
-            Err(e) => HttpResponse::InternalServerError().body(format!("Error: {:?}", e)),
-        }
+    async fn health() -> impl Responder {
+        tracing::info!("Getting API version...");
+        HttpResponse::Ok()
+                .append_header(("version", API_VERSION))
+                .body(API_VERSION)
     }
 }

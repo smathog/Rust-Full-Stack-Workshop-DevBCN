@@ -1,33 +1,23 @@
-use api_lib::health::health_service;
+use api_lib::health_service;
 
 use actix_web::body::to_bytes;
 use actix_web::http::StatusCode;
-use actix_web::{test, web, App};
+use actix_web::{test, App};
 use dotenvy::{dotenv_override, var};
-use sqlx::{query_scalar, PgPool};
+use sqlx::PgPool;
 
 #[actix_web::test]
 async fn test_health_check() {
-    let pool = get_pgpool();
-    let version: String = query_scalar("SELECT version()")
-        .fetch_one(&pool)
-        .await
-        .unwrap();
-
-    let app = test::init_service(
-        App::new()
-            .app_data(web::Data::new(pool.clone()))
-            .configure(health_service),
-    )
-    .await;
+    let app = test::init_service(App::new().configure(health_service)).await;
     let req = test::TestRequest::get().uri("/health").to_request();
     let resp = test::call_service(&app, req).await;
+    let version = api_lib::API_VERSION;
     assert!(resp.status().is_success());
     assert_eq!(resp.status(), StatusCode::OK);
     let version_header = resp.headers().get("version").unwrap();
-    assert_eq!(version_header, &version);
+    assert_eq!(version_header, version);
     let body = to_bytes(resp.into_body()).await.unwrap();
-    assert_eq!(std::str::from_utf8(&body).unwrap(), &version);
+    assert_eq!(std::str::from_utf8(&body).unwrap(), version);
 }
 
 fn get_pgpool() -> PgPool {
