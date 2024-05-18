@@ -1,3 +1,3 @@
 [workspace]
-members = ["api/lib", "app", "shared"]
+members = ["api/lib", "app", "front", "shared"]
 resolver = "2"
