@@ -1370,6 +1370,7 @@ dependencies = [
  "dioxus",
  "dioxus-logger",
  "shared",
+ "uuid",
 ]
 
 [[package]]

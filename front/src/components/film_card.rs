@@ -3,12 +3,18 @@ use crate::models::ButtonType;
 use dioxus::prelude::*;
 use shared::models::FilmModel;
 
+// #[derive(PartialEq, Clone, Props)]
+// struct FilmCardProps {
+//
+// }
+
 #[component]
 pub fn FilmCard(
-    film: FilmModel,
+    film: ReadOnlySignal<FilmModel>,
     on_edit: EventHandler<MouseEvent>,
     on_delete: EventHandler<MouseEvent>,
 ) -> Element {
+    let film = &*film.read();
     rsx! {
         li {
             class: "film-card md:basis-1/4 p-4 rounded box-border bg-neutral-100 drop-shadow-md transition-all ease-in-out hover:drop-shadow-xl flex-col flex justify-start items-stretch animate-fade animate-duration-500 animate-ease-in-out animate-normal animate-fill-both",
