@@ -15,6 +15,15 @@ pub fn FilmModal(
         return None;
     }
     let mut draft_film = use_signal(|| blank_film());
+    {
+        let mut draft_film = draft_film.clone();
+        use_effect(move || {
+            match &film {
+                None => draft_film.set(blank_film()),
+                Some(film) => draft_film.set(film.clone()),
+            }
+        });
+    }
     rsx!(
         article {
             class: "z-50 w-full h-full fixed top-0 right-0 bg-gray-800 bg-opacity-50 flex flex-col justify-center items-center",

@@ -12,7 +12,7 @@ pub fn Header() -> Element {
             div {
                 class: "container mx-auto flex flex-wrap p-0 flex-col md:flex-row justify-between items-center",
                 a {
-                    class: "flex title-font font-medium items-center text-teal-950 mb-4",
+                    class: "flex title-font font-medium items-center text-teal-950 mb-4 md:mb-0",
                     img {
                         class: "bg-transparent p-2 animate-jump",
                         alt: "ferris",
@@ -21,13 +21,13 @@ pub fn Header() -> Element {
                     span {
                         class: "ml-3 text-2xl", "Rusty films"
                     }
-                    Button {
-                        button_type: ButtonType::Primary,
-                        on_click: move |_| {
-                            modal_visibility.write().0 = true;
-                        },
-                        "Add new film"
-                    }
+                }
+                Button {
+                    button_type: ButtonType::Primary,
+                    on_click: move |_| {
+                        modal_visibility.write().0 = true;
+                    },
+                    "Add new film"
                 }
             }
         }
