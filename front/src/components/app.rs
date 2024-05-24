@@ -79,7 +79,7 @@ pub fn App() -> Element {
         let mut is_modal_visible = modal_visibility.clone();
         spawn({
            async move {
-               let response = if current_selected_film.read().is_some() {
+               let response = if current_selected_film.peek().is_some() {
                    reqwest::Client::new()
                        .put(&films_endpoint())
                        .json(&film)
@@ -138,7 +138,7 @@ pub fn App() -> Element {
             }
             Footer {}
             FilmModal {
-                film: selected_film(),
+                film: selected_film,
                 on_create_or_update: move |new_film| {
                     create_or_update_film(new_film);
                 },

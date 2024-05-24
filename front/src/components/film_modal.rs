@@ -1,7 +1,6 @@
 use crate::components::Button;
 use crate::models::{ButtonType, FilmModalVisibility};
 use dioxus::prelude::*;
-use dioxus_logger::tracing::info;
 use shared::models::FilmModel;
 use uuid::Uuid;
 
@@ -9,7 +8,7 @@ use uuid::Uuid;
 pub fn FilmModal(
     on_create_or_update: EventHandler<FilmModel>,
     on_cancel: EventHandler<MouseEvent>,
-    film: Option<FilmModel>,
+    film: ReadOnlySignal<Option<FilmModel>>,
 ) -> Element {
     let modal_visibility = use_context::<Signal<FilmModalVisibility>>();
     if !modal_visibility.read().0 {
@@ -23,7 +22,7 @@ pub fn FilmModal(
         use_effect(move || {
             // Invoke whenever modal_visibility changes...
             modal_visibility.read();
-            match &film {
+            match &*film.read() {
                 None => draft_film.set(blank_film()),
                 Some(film) => draft_film.set(film.clone()),
             }
