@@ -127,7 +127,7 @@ pub fn FilmModal(
                     }
                     Button {
                         button_type: ButtonType::Primary,
-                        on_click: move |evt| {
+                        on_click: move |_evt| {
                             on_create_or_update.call(draft_film());
                             draft_film.set(blank_film());
                         },

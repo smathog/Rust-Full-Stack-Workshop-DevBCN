@@ -61,7 +61,7 @@ pub fn App() -> Element {
                     .send()
                     .await;
                 match response {
-                    Ok(data) => {
+                    Ok(_data) => {
                         info!("Film deleted");
                         force_get_films.set(());
                     }
@@ -76,7 +76,7 @@ pub fn App() -> Element {
     let create_or_update_film = move |film: FilmModel| {
         let mut force_get_films = force_get_films.clone();
         let mut current_selected_film = selected_film.clone();
-        let is_modal_visible = modal_visibility.clone();
+        let mut is_modal_visible = modal_visibility.clone();
         spawn({
            async move {
                let response = if current_selected_film.read().is_some() {
@@ -96,7 +96,7 @@ pub fn App() -> Element {
                    Ok(_) => {
                        info!("Film created");
                        current_selected_film.set(None);
-                       modal_visibility.write().0 = false;
+                       is_modal_visible.write().0 = false;
                        force_get_films.set(());
                    }
                    Err(err) => {

@@ -1,0 +1,32 @@
+[tasks.db-start]
+workspace = false
+script_runner = "@shell"
+script = '''
+docker run --name postgres -e POSTGRES_PASSWORD=password -p 127.0.0.1:5432:5432 -d postgres
+'''
+[tasks.db-stop]
+workspace = false
+script_runner = "@shell"
+script = '''
+docker stop postgres
+docker rm postgres
+'''
+
+[tasks.front-build]
+workspace = false
+script_runner = "bash"
+script_extension = "sh"
+script = '''
+rm -rf static
+mkdir static
+cd front
+npm exec tailwindcss -i ./input.css -o ./public/tailwind.css
+dx build --release
+cp -r dist/* ../static
+'''
+
+[tasks.app-run]
+workspace = false
+env = { RUST_LOG="info" }
+command = "cargo"
+args = ["run", "--bin", "app"]
