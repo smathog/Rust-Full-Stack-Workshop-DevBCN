@@ -1,9 +1,9 @@
 # Rust Full Stack Workshop
 
 An implementation of the Barcelona Rust [Rust Full Stack Workshop](https://bcnrust.github.io/devbcn-workshop/index.html) project
-without the use of Shuttle, with Actix 4 and Dioxus 0.5. Accordingly, there are several implementation differences between
-this implementation and the reference version, particularly when it comes to deployment and the implementation of the frontend,
-as Dioxus 0.5 differs significantly from previous versions due to the new signal-based hooks.
+without the use of Shuttle, with [Actix 4](https://actix.rs/) and [Dioxus 0.5](https://dioxuslabs.com/). Accordingly, there are several implementation differences between
+this implementation and the reference version, particularly when it comes to deployment (localhost only for now!) and the implementation of the frontend,
+as Dioxus 0.5 differs pretty significantly from previous versions due to the new signal-based hooks.
 
 ## Database Deployment
 
@@ -24,6 +24,19 @@ To shut down the database, use either docker directly on the command line or use
 ```shell
 cargo make db-stop
 ```
+
+Relevant database variables should be stored in a .env file in the workspace directory. For example,
+
+```
+POSTGRES_DB_NAME=postgres
+POSTGRES_HOST=127.0.0.1
+POSTGRES_PORT=5432
+POSTGRES_USERNAME=postgres
+POSTGRES_PASSWORD=password
+```
+
+these will be picked up via [dotenvy](https://github.com/allan2/dotenvy) and used to configure the DB
+connection with Actix. 
 
 ## Building and Deploying
 
