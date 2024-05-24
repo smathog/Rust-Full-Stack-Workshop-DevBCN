@@ -40,16 +40,21 @@ pub fn App() -> Element {
         let force_get_films = force_get_films.clone();
         let mut films = films.clone();
         use_effect(move || {
+            info!("Executing use_effect to get list of films...");
             force_get_films.read();
             let closure = move || async move {
+                info!("Retrieving films...");
                 let current_films = get_films().await;
+                info!("Retrieved films...");
                 if current_films.is_empty() {
                     films.set(None);
                 } else {
                     films.set(Some(current_films));
                 }
             };
+            info!("Spawning read closure...");
             spawn(closure());
+            info!("Closure spawned...");
         });
     }
     let delete_film = move |filmId: Uuid| {

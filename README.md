@@ -24,3 +24,25 @@ To shut down the database, use either docker directly on the command line or use
 ```shell
 cargo make db-stop
 ```
+
+## Building and Deploying
+
+Use the following cargo command to build the front project:
+
+```shell
+cargo make front-build
+```
+
+and then use this command to deploy the application to localhost:8080
+
+```shell
+cargo make app-run
+```
+
+## Implementation Details
+
+Due to [this issue](https://github.com/DioxusLabs/dioxus/issues/2307) as of 05/23/24 it is necessary to pull from GitHub 
+instead of from crates.io, since there's currently a fix available on GitHub. I found that this was needed because
+calls to the `delete_film` closure in app.rs in the front crate did not trigger `use_effect` when `spawn` was invoked on
+an `async` block that updated a `signal` that was subscribed to in `use_effect`, which made it necessary to trigger a full
+rerender of the `App` component in order to make the deleted film disappear from the UI.

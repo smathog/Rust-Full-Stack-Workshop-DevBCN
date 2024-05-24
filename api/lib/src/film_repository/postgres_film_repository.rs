@@ -63,7 +63,7 @@ impl FilmRepository for PostgresFilmRepository {
         query_as::<_, FilmModel>(
             r#"
             UPDATE films
-            SET title = $2, directory = $3, year = $4, poster = $5
+            SET title = $2, director = $3, year = $4, poster = $5
             WHERE id = $1
             RETURNING id, title, director, year, poster, created_at, updated_at
             "#,
